@@ -94,6 +94,44 @@ ResultSet results = pstmt.executeQuery( );</code></pre>
                             <h3>Explanation:</h3>
                             <p>"Cross-Origin Resource Sharing (CORS) is an HTTP-header based mechanism that allows a server to indicate any origins (domain, scheme, or port) other than its own from which a browser should permit loading resources. CORS also relies on a mechanism by which browsers make a "preflight" request to the server hosting the cross-origin resource, in order to check that the server will permit the actual request. In that preflight, the browser sends headers that indicate the HTTP method and headers that will be used in the actual request."</p>
                             <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank"> Mozilla Developer Network: Cross-Origin Resource Sharing</a></small>
+                            <p>"The W3C CORS specification mandates that for non simple requests, such as requests other than GET or POST or requests that uses credentials, a pre-flight OPTIONS request must be sent in advance to check if the type of request will have a bad impact on the data. The pre-flight request checks the methods and headers allowed by the server, and if credentials are permitted. Based on the result of the OPTIONS request, the browser decides whether the request is allowed or not."</p>
+                            <small>From: <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing">OWASP Cross-Origin Resource Sharing</a></small>
+                            <p>The Origin request header is always sent by the browser in a CORS request and indicates the origin of the request. The Origin header cannot be changed from JavaScript as the browser (the user-agent) blocks its modification; however, relying on this header for Access Control checks is not a good idea as it may be spoofed outside the browser, for example by using a proxy, so you still need to check that application-level protocols are used to protect sensitive data.
+                                Access-Control-Allow-Origin is a response header used by a server to indicate which domains are allowed to read the response. Based on the CORS W3 Specification it is up to the client to determine and enforce the restriction of whether the client has access to the response data based on this header.
+                                From a security testing perspective you should look for insecure configurations as for example using a * wildcard as value of the Access-Control-Allow-Origin header that means all domains are allowed. Another insecure example is when the server returns back the origin header without any additional checks, which can lead to access of sensitive data. Note that the configuration of allowing cross-origin requests is very insecure and is not acceptable in general terms, except in the case of a public API that is intended to be accessible by everyone.</p>
+                            <small>From: <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing">OWASP Cross-Origin Resource Sharing</a></small>
+                            <h3>Solutions:</h3>
+                            <p>Unless an engineer specifically alters the Access-Control-Allow-Origin setting on the server / response object to allow other sites (or ALL sites via the "*") there is no reason to specifically be concerned with CORS vulnerabilities. The default setting is to let the browser inherently set "same-origin policy" unless it changed. Outside of implicitly changing this setting, the browser will only allow same-origin requests. That being said, the reason we are able to load pictures from another website or fetch data from another api is because the cors setting for that data / server is set to allow CORS / cross origin. In fact. Requests can and are made cross origin all the time. The browser reads the headers in the response object to determine with the response is accepted and allowed to be used / accessed. Additionally embedding of cross origin resources are allowed. It is reading those resources when it comes into question. A list of permitted cross origin resources can be found here: <a href="https://web.dev/same-origin-policy/">web.dev: Same Origin Policy</a></p>
+                            <h3>What if I want to change the CORS policy on the server?</h3>
+                            <small>Example in Node/Express: requiring cors</small>
+                            <pre><code>var express = require('express');
+var cors = require('cors');
+var app = express();
+app.use(cors());
+/* your regular routes go here */</code></pre>
+                            <small>Setting Access Control Allow origin to public:</small>
+                            <pre><code>Access-Control-Allow-Origin: *</code></pre>
+                            <small>Restricting to One Origin:</small>
+                            <pre><code>app.use(cors({
+origin: 'http://yourapp.com'
+}));</code></pre>
+                            <small>Setting to a list of Allowed Origins:</small>
+                            <pre><code>var allowedOrigins = ['http://localhost:3000',
+                                'http://yourapp.com'];
+app.use(cors({
+origin: function(origin, callback){
+    // allow requests with no origin
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+    var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+    return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+}
+}));</code></pre>
+                            <p>To reiterate: not setting / changing CORS settings is inherently the safest setting for a website and the browser / server are automatically set this way unless specifically changed.</p>
                         </div>
                     </details>
                     <details>
