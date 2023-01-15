@@ -309,9 +309,11 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         <summary>Permissions Policy Header Not Set</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Permissions Policy, formerly known as Feature Policy, allows the developer to control the browser features available to a page, its iframes, and subresources, by declaring a set of policies for the browser to enforce. These policies are applied to origins provided in a response header origin list. The origin list can contain same-origins and/or cross-origins, and it allows the developer to control first-party and third-party access to browser features. An empty permissions policy is a permissions policy that has an inherited policy which contains "Enabled" for every supported feature, and a declared policy which is an empty map. Set it and disable all the features that your site does not need or allow them only to the authorized domains:"</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Permissions-Policy allows you to control which origins can use which browser features, both in the top-level page and in embedded frames. For every feature controlled by Feature Policy, the feature is only enabled in the current document or frame if its origin matches the allowed list of origins. This means that you can configure your site to never allow the camera or microphone to be activated. This prevents that an injection, for example an XSS, enables the camera, the microphone, or other browser feature."</p>
+                            <pre><code>Permissions-Policy: geolocation=(self "https://example.com"), camera=(), microphone=()</code></pre>
+                            <small>From: <a href="https://developer.chrome.com/en/docs/privacy-sandbox/permissions-policy/">Chrome: Permissions Policy</a> && <a href="https://www.w3.org/TR/permissions-policy/#features">W3C: Permissions Policy</a></small>
                         </div>
                     </details>
                     <details>
