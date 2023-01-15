@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="header">
+        <h1>Host Cogent Vulnerabilities Project</h1>
+    </div>
+    <div id="main">
+        <aside>
+            <h3>Links to Results</h3>
+            <div><a href="../index.html">HOME</a></div>
+            <div><a href="../web_one/web_one.html">SITE ONE</a></div>
+            <div><a href="../web_two/web_two.html">SITE TWO</a></div>
+            <div><a href="../web_three/web_three.html">SITE THREE</a></div>
+            <div><a href="../web_four/web_four.html">SITE FOUR</a></div>
+        </aside>
+        <section>
+            <h3>Site One: <small><a href="http://rest.vulnweb.com" target="_blank">http://rest.vulnweb.com (REST/OPEN API)</a></small></h3>
+            <div>
+                <h3>Technologies Used In This Site:</h3>
+                <ul>
+                    <details>
+                        <summary>Tech <small>(scanned by <a href="https://zofixer.com/" target="_blank">zofixer.com:</a>)</small></summary>
+                        <ul>
+                            <li>Apache HTTP Server</li>
+                            <li>Bootstrap</li>
+                            <li>Debian</li>
+                            <li>Google Font API</li>
+                            <li>HandleBars</li>
+                            <li>PHP</li>
+                            <li>RequireJS</li>
+                        </ul>
+                    </details>
+                </ul>
+                <h3>Vulnerabilities to check for:</h3>
+                <ul>
+                    <details>
+                        <summary>SQL Injection <span class="SQLI">(SQLI)</span></summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>"SQL Injection flaws are introduced when software developers create dynamic database queries constructed with string concatenation which includes user supplied input. To avoid SQL injection flaws is simple. Developers need to either: a) stop writing dynamic queries with string concatenation; and/or b) prevent user supplied input which contains malicious SQL from affecting the logic of the executed query."</p>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" target="_blank">OWASP SQL Injection Prevention</a></small>
+                            <h3>Solution(s):</h3>
+                            <h5>Parameterized Queries & Prepared Statements (server side)</h5>
+                            <p>"SQL Injection is best prevented through the use of parameterized queries. The following chart demonstrates, with real-world code samples, how to build parameterized queries in most of the common web languages. The purpose of these code samples is to demonstrate to the web developer how to avoid SQL Injection when building database queries within a web application."</p>
+                            <small>From <a href="https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html" target="_blank">OWASP CheatSheet Query Parameterization</a></small>
+                            <small>Example of Parameterization in Java (server side)</small>
+<pre><code>String custname = request.getParameter("customerName");
+String query = "SELECT account_balance FROM user_data WHERE user_name = ? ";
+PreparedStatement pstmt = connection.prepareStatement( query );
+pstmt.setString( 1, custname);
+ResultSet results = pstmt.executeQuery( );</code></pre>
+                            <h5>ORM - Object Relational Mapping (server side)</h5>
+                            <p>"The use of an object-relational mapping (ORM) layer is also something you can consider. An ORM layer transforms the data from the database into objects and vise-versa. Using an ORM library reduces explicit SQL queries and, therefore, much less vulnerable to SQL injection."</p>
+                            <small>From: <a href="https://www.globaldots.com/resources/blog/8-best-practices-to-prevent-sql-injection-attacks/#:~:text=Use%20an%20ORM%20layer,-The%20use%20of&text=An%20ORM%20layer%20transforms%20the,and%20Entity%20Framework%20for%20C%23." target="_blank">GlobalDots: 8 Best Practices To Prevent Injection</a></small>
+                            <small>Exmaple from Django ORM</small>
+                            <pre><code>Entry.objects.filter(pub_date__year=2006)</code></pre>
+                            <p>Explanation: Because the orm accepts specific query parameters it does not open the door to the user being able to create / inject their on sql query that the database then executes. The information has to match the specific items being searched for through the ORM </p>
+                            <h5>Input Validation(client side)</h5>
+                            <p>The main line of defense on the client side to prevent sql injection is input validation. It is meant to be in addition to parameterization / use of an orm to perform sql queries. It is not a primary line of defense. That being said validation of the input can require the user to match specific information in the html so that can cannot just send whatever information they want to send. Validations can include: data type validators, arrays of allowed or hard-coded values, regular expressions for matching specific patterns, min or max values / ranges and many more. Validation can also be checked on the backend after the information is submitted.</p>
+                            <small>Examples of HTML Input Validation:</small>
+                            <pre><code>&lt;input type="text" id="choose" name="i-like" required minlength="6" maxlength="6" /&gt;</code></pre><br>
+                            <pre><code>&lt;input type="number" id="number" name="amount" value="1" min="1" max="10" /&gt;</code></pre><br>
+                            <pre><code>&lt;input id="choose" name="i-like" required pattern="[Bb]anana|[Cc]herry" /&gt;</code></pre>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Cross Site Scripting <span class="XSS">(XSS)</span></summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>"Cross-Site Scripting (XSS) is a misnomer. The name originated from early versions of the attack where stealing data cross-site was the primary focus. Since then, it has extended to include injection of basically any content, but we still refer to this as XSS. XSS is serious and can lead to account impersonation, observing user behaviour, loading external content, stealing sensitive data, and more."</p>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#common-mistake" target="_blank">OWASP Cross Site Scripting Prevention</a></small>
+                            <h3>Solution(s)</h3>
+                            <h5>XSS Defense Philosophy</h5>
+                            <p>"For XSS attacks to be successful, an attacker needs to insert and execute malicious content in a webpage. Each variable in a web application needs to be protected. Ensuring that all variables go through validation and are then escaped or sanitized is known as perfect injection resistance. Any variable that does not go through this process is a potential weakness. Frameworks make it easy to ensure variables are correctly validated and escaped or sanitised. However, frameworks aren't perfect and security gaps still exist in popular frameworks like React and Angular. Output Encoding and HTML Sanitization help address those gaps."</p>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#common-mistake" target="_blank">OWASP Cross Site Scripting Prevention</a></small>
+                            <h5>Output Encoding / Character Escaping, and Input Validation</h5>
+                            <p>Output Encoding, Character Escaping, and Input Validation are top defensive strategies to minimize and prevent cross site scripting attacks. When user input that is being displayed as output to the UI there exists an opportunity for a user to type in code that can end up being run because the computer doesn't recognize or know that it is just meant to be displayed as a string, but truly ends up being run as code. Hijackers can exploit this by typing in the code they wish to run. For example</p>
+                            <p>Most frameworks and frontend libraries have output character escaping / security measures built into their technologies. React and Django are two such examples. PHP however, does not.</p>
+                            <h5>PHP Code Example For Hangling Output Character Escaping:</h5>
+                            <p>PHP has functionality built into its system that allows for character escaping, but it is not automatically executed or used:</p>
+                            <pre><code>&lt;?php function escape($string) { return htmlspecialchars($string, ENT_QUOTES) } ?&gt;</code></pre><br>
+                            <pre><code>&lt;p&gt;Hello &lt;?php echo escape($name)?&gt;;&lt;p&gt;</code></pre>
+                            <h5>Explanation:</h5>
+                            <p>When a variable containing user or external input is going to be output in the UI.. if the output contains what looks like actual code (ex: &lt;script&gt;alert(1)&lt;script&gt;) that code will be read by the browser as being actual code to run unless those special html characters (and others) are intentionally told to output as actual test and not to turn it into code. </p>
+                            <p>The output escaping function will parse / convert each variable / user info / output so that it cannot output anything other than a regular string. It is a primary layer of preventing cross site scripting. While user input can be filtered before saving to the database or returning the information back to the frontend, there are other ways to still directly change the output right before it is actually output. Therefore the best place to prevent XSS is right before it is actually output, like the given PHP example. React and Django Templating operate the same way of checking right before output.</p>
+                            <p>An added level of security is input validation that forces a user to match specific parameters so random code is less likely to be input</p>
+                            <p>We also have html sanitization. This process runs the entire html document through a function that will scan for unsafe or unwanted html or for what is deemed safe and parse out the opposite then returning the "sanitized" document. PHP has a strip_tags() function for example. This process does not always have the desired result as it can also stip wanted tags and code. The best approach is considered character escaping and focusing directly on where input/data is being out and displayed.</p>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Cross-Origin Resource Sharing <span class="CORS">(CORS)</span></summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>"Cross-Origin Resource Sharing (CORS) is an HTTP-header based mechanism that allows a server to indicate any origins (domain, scheme, or port) other than its own from which a browser should permit loading resources. CORS also relies on a mechanism by which browsers make a "preflight" request to the server hosting the cross-origin resource, in order to check that the server will permit the actual request. In that preflight, the browser sends headers that indicate the HTTP method and headers that will be used in the actual request."</p>
+                            <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank"> Mozilla Developer Network: Cross-Origin Resource Sharing</a></small>
+                            <p>"The W3C CORS specification mandates that for non simple requests, such as requests other than GET or POST or requests that uses credentials, a pre-flight OPTIONS request must be sent in advance to check if the type of request will have a bad impact on the data. The pre-flight request checks the methods and headers allowed by the server, and if credentials are permitted. Based on the result of the OPTIONS request, the browser decides whether the request is allowed or not."</p>
+                            <small>From: <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing">OWASP Cross-Origin Resource Sharing</a></small>
+                            <p>The Origin request header is always sent by the browser in a CORS request and indicates the origin of the request. The Origin header cannot be changed from JavaScript as the browser (the user-agent) blocks its modification; however, relying on this header for Access Control checks is not a good idea as it may be spoofed outside the browser, for example by using a proxy, so you still need to check that application-level protocols are used to protect sensitive data.
+                                Access-Control-Allow-Origin is a response header used by a server to indicate which domains are allowed to read the response. Based on the CORS W3 Specification it is up to the client to determine and enforce the restriction of whether the client has access to the response data based on this header.
+                                From a security testing perspective you should look for insecure configurations as for example using a * wildcard as value of the Access-Control-Allow-Origin header that means all domains are allowed. Another insecure example is when the server returns back the origin header without any additional checks, which can lead to access of sensitive data. Note that the configuration of allowing cross-origin requests is very insecure and is not acceptable in general terms, except in the case of a public API that is intended to be accessible by everyone.</p>
+                            <small>From: <a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing">OWASP Cross-Origin Resource Sharing</a></small>
+                            <h3>Solutions:</h3>
+                            <p>Unless an engineer specifically alters the Access-Control-Allow-Origin setting on the server / response object to allow other sites (or ALL sites via the "*") there is no reason to specifically be concerned with CORS vulnerabilities. The default setting is to let the browser inherently set "same-origin policy" unless it changed. Outside of implicitly changing this setting, the browser will only allow same-origin requests. That being said, the reason we are able to load pictures from another website or fetch data from another api is because the cors setting for that data / server is set to allow CORS / cross origin. In fact. Requests can and are made cross origin all the time. The browser reads the headers in the response object to determine with the response is accepted and allowed to be used / accessed. Additionally embedding of cross origin resources are allowed. It is reading those resources when it comes into question. A list of permitted cross origin resources can be found here: <a href="https://web.dev/same-origin-policy/">web.dev: Same Origin Policy</a></p>
+                            <h3>What if I want to change the CORS policy on the server?</h3>
+                            <small>Example in Node/Express: requiring cors</small>
+                            <pre><code>var express = require('express');
+var cors = require('cors');
+var app = express();
+app.use(cors());
+/* your regular routes go here */</code></pre>
+                            <small>Setting Access Control Allow origin to public:</small>
+                            <pre><code>Access-Control-Allow-Origin: *</code></pre>
+                            <small>Restricting to One Origin:</small>
+                            <pre><code>app.use(cors({
+origin: 'http://yourapp.com'
+}));</code></pre>
+                            <small>Setting to a list of Allowed Origins:</small>
+                            <pre><code>var allowedOrigins = ['http://localhost:3000',
+                                'http://yourapp.com'];
+app.use(cors({
+origin: function(origin, callback){
+    // allow requests with no origin
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+    var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+    return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+}
+}));</code></pre>
+                            <p>To reiterate: not setting / changing CORS settings is inherently the safest setting for a website and the browser / server are automatically set this way unless specifically changed.</p>
+
+                        </div>
+                    </details>
+                    <details>
+                        <summary>HTTPOnly Cookie <span class="HTTPOC">(HTTPOC)</span></summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Http Cookies: "An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to a user's web browser. The browser may store the cookie and send it back to the same server with later requests. Typically, an HTTP cookie is use to tell if two requests come from the same browser—keeping a user logged in, for example. It remembers stateful information for the stateless HTTP protocol."</p>
+                            <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">Mozilla Developer Network: HTTP Cookies</a></small>
+                            <p>"HttpOnly is an additional flag included in a Set-Cookie HTTP response header. Using the HttpOnly flag when generating a cookie helps mitigate the risk of client side script accessing the protected cookie (if the browser supports it)."</p>
+                            <small>From: <a href="https://owasp.org/www-community/HttpOnly" target="_blank">OWASP HttpOnly</a></small>
+                            <h3>Solution:</h3>
+                            <p>HttpOnly is a security measure set by the Set-Cookie HTTP Response Header from the server. After examining the network tab in Chrome DevTools for request and response headers as well as the applications tab for any cookies being set, I did not find anything being set by this api. As a result there is not currently a specific cookie vulnerable to scripting attacks for this site. Additionally cookies are only an issue if the ones being set by the server have not been properly secured when setting the cookies in the response header. HttpOnly is just one of those mitigation tactics that can be used to help prevent Cross Site Scripting <span class="XSS">(XSS)</span>. "Cookies are also susceptible to CSRF (Cross-Site Request Forgery), XS-Leaks (Cross-Site Leaks), Network Attacks, and others." <small><a href="https://www.appsecmonkey.com/blog/cookie-security">App Sec Monkey</a></small> has an excellent site with explanation on Cookie Related Attacks and mitigation tactics for attacks beyond HttpOnly Cookie settings. HttpOnly settings are easily added by simply adding "HttpOnly" on the response header when setting the cookie.</p>
+                            <small>Example of a secure cookie setup in response headers would be (based on <a href="https://www.appsecmonkey.com/blog/cookie-security" target="_blank">App Sec Monkey</a>):</small>
+                            <pre><code>Set-Cookie: __Host-SessionId=s3cr3t; Secure; HttpOnly; SameSite=Lax; Path=/</code></pre>
+                            <h3>Further notes:</h3>
+                            <p>"According to Michael Howard, Senior Security Program Manager in the Secure Windows Initiative group at Microsoft, the majority of XSS attacks target theft of session cookies. A server could help mitigate this issue by setting the HttpOnly flag on a cookie it creates, indicating the cookie should not be accessible on the client. If a browser that supports HttpOnly detects a cookie containing the HttpOnly flag, and client side script code attempts to read the cookie, the browser returns an empty string as the result. This causes the attack to fail by preventing the malicious (usually XSS) code from sending the data to an attacker’s website."</p>
+                            <small>From: <a href="https://owasp.org/www-community/HttpOnly#:~:text=If%20a%20browser%20does%20not,or%20modification%20by%20malicious%20script." target="_blank">OWASP HttpOnly</a></small>
+                        </div>
+                    </details>
+                </ul>
+            </div>
+            <div>
+                <h3>Vulnerabilities According to <small><a href="https://zofixer.com/" target="_blank">zofixer.com:</a></small></h3>
+                <small>Click on the arrow next to the vulnerability to see an explanation and solutions:</small>
+                <ul>
+                    <details>
+                        <summary>External Redirect</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>"Unvalidated redirects and forwards are possible when a web application accepts untrusted input that could cause the web application to redirect the request to a URL contained within untrusted input. By modifying untrusted URL input to a malicious site, an attacker may successfully launch a phishing scam and steal user credentials. Because the server name in the modified link is identical to the original site, phishing attempts may have a more trustworthy appearance. Unvalidated redirect and forward attacks can also be used to maliciously craft a URL that would pass the application's access control check and then forward the attacker to privileged functions that they would normally not be able to access."</p>
+                            <small>From <a href="https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html" target="_blank">OWASP Cheat Sheet Series</a></small>
+                            <h3>Solutions:</h3>
+                            <p></p>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Content Security Policy Header Not Set <span class="XSS">(XSS)</span></summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>"The HTTP Content-Security-Policy response header allows web site administrators to control resources the user agent is allowed to load for a given page. With a few exceptions, policies mostly involve specifying server origins and script endpoints. This helps guard against cross-site scripting attacks (Cross-site_scripting)."</p>
+                            <small>From <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy" target="_blank">Mozilla ContentSecurity Policy</a></small>
+                            <p>To fix this we can set the content security policy in our application, server side by explicitly setting the policy on the response object that will be returned back to the client after a request is made. OR we can set it explicitly through a &lt;meta&gt; tag.</p>
+                            <h3>Solutions(s) Server Side:</h3>
+                            <p>For example... when working in NodeJS/ExpressJS we could do this in the server:</p>
+                            <pre><code>res.set("Content-Security-Policy", "default-src 'self'");</code></pre>
+                            <p>This will explicitly set the policy to say that a script can only be accepted from the same origin, which will help prevent cross site scripting. There all multiple other options that can be added on. There are also node packages that can be used specifically for setting the content policy...</p>
+                            <pre><code>const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');<br>
+app.use(expressCspHeader({
+    directives: {
+    'default-src': [SELF],
+    'script-src': [SELF, INLINE, 'somehost.com'],
+    'style-src': [SELF, 'mystyles.net'],
+    'img-src': ['data:', 'images.com'],
+    'worker-src': [NONE],
+    'block-all-mixed-content': true
+    }
+}));</code></pre>
+                            <h3>Solution(s) Client Side:</h3>
+                            <p>And then in the browser we could also do:</p>
+                            <pre><code>&lt;meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://*; child-src 'none';"/&gt;</code></pre>
+                            <small>Further Info: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html" target="_blank">OWASP CheatSheeton Content-Security-Policy</a></small>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Missing Anti-clickjacking Header</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p></p>
+                            <p>"Clickjacking, also known as a “UI redress attack”, is when an attacker uses multiple transparent or opaque layers to trick a user into clicking on a button or link on another page when they were intending to click on the top level page. Thus, the attacker is “hijacking” clicks meant for their page and routing them to another page, most likely owned by another application, domain, or both. Using a similar technique, keystrokes can also be hijacked. With a carefully crafted combination of stylesheets, iframes, and text boxes, a user can be led to believe they are typing in the password to their email or bank account, but are instead typing into an invisible frame controlled by the attacker."</p>
+                            <small>From <a href="https://owasp.org/www-community/attacks/Clickjacking" target="_blank">OWASP on Clickjacking:</a></small>
+                            <h3>Solutions:</h3>
+                            <p>Preventing the browser from loading the page in frame using the X-Frame-Options or Content Security Policy (frame-ancestors) HTTP headers. Preventing session cookies from being included when the page is loaded in a frame using the SameSite cookie attribute. Implementing JavaScript code in the page to attempt to prevent it being loaded in a frame (known as a "frame-buster").</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                            <p>The permissions policy header policy that can be set that cxan explicitly allow or deny specific feratures like iframes or</p>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Sub Resource Integrity Attribute Missing</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Anti-CSRF Tokens Check</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>HTTP Only Site</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Web Cache Deception</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Server Leaks Version Information via Server HTTP Response Header Field</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Permissions Policy Header Not Set</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                    <details>
+                        <summary>X-Content-Type-Options Header Missing</summary>
+                        <div class="details-box">
+                            <h3>Explanation:</h3>
+                            <p>Explanation...</p>
+                            <h3>Solutions:</h3>
+                            <p>Solutions with Code</p>
+                            <h3>Permissions Policy Header Not Set:</h3>
+                        </div>
+                    </details>
+                </ul>
+            </div>
+            <div>
+                <h3>Site Specific Solutions and Feedback:</h3>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <h5>[footer]</h5>
+    </footer>
+</body>
+</html>

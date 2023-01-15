@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    text-align: justify;
+        text-justify: inter-word;
+}
+
+#header {
+    background-color: cornflowerblue;
+    min-height: 10vh;
+}
+
+#header>img {
+    height: 10vh;
+    position: absolute;
+}
+
+#header>h1 {
+    margin-left: 200px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    margin: 0;
+}
+
+#main {
+    display: flex;
+    min-height: 80vh;
+    max-height: 80vh;
+    overflow: scroll;
+    padding-bottom: 2.5vh;
+    padding-right: 2.5vh;
+}
+
+#intro {
+    padding-right: 10vw;
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 200px;
+    max-width: 300px;
+    overflow: scroll;
+    margin-right: 10px;
+}
+
+aside > h3 {
+    margin-left: 10px;
+}
+
+aside > div {
+    padding: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+}
+
+aside > div > a {
+    margin: 10px;
+}
+
+
+aside > div:hover {
+    background-color: cornflowerblue;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    margin: 0;
+}
+
+pre > code {
+    padding: 0;
+}
+
+code, pre {
+    background: #cbd9ea;
+    word-wrap: break-word;
+    border-radius: .2rem;
+    padding: 5px 20px;
+}
+
+pre {
+    padding: 5px 20px;
+    width: fit-content;
+    margin: 0;
+    max-width: 75vw;
+    overflow: scroll;
+    border: 0.5px solid black;
+}
+
+.details-box {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 15px;
+}
+
+h3, h5 {
+    margin-bottom: 5px;
+}
+
+p {
+    margin: 5px;
+}
+
+ul, ol {
+    margin-top: 5px;
+}
+
+footer {
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: cornflowerblue;
+}
+
+.SQLI {
+    color: orange;
+}
+
+.HTTPOC {
+    color: green;
+}
+
+.XSS {
+    color: purple;
+}
+
+.CORS {
+    color: red;
+}
