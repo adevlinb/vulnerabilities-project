@@ -231,7 +231,7 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                     <details>
-                        <summary>Sub Resource Integrity Attribute Missing</summary>
+                        <summary>Anti-CSRF Tokens Check</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>Explanation...</p>
@@ -241,13 +241,17 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                     <details>
-                        <summary>Anti-CSRF Tokens Check</summary>
+                        <summary>Sub Resource Integrity Attribute Missing</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Subresource Integrity (SRI) is a security feature that enables browsers to verify that resources they fetch (for example, from a CDN) are delivered without unexpected manipulation. It works by allowing you to provide a cryptographic hash that a fetched resource must match. You use the Subresource Integrity feature by specifying a base64-encoded cryptographic hash of a resource (file) you're telling the browser to fetch, in the value of the integrity attribute of any &lt;script&gt; or &lt;link&gt; element. An integrity value begins with at least one string, with each string including a prefix indicating a particular hash algorithm (currently the allowed prefixes are sha256, sha384, and sha512), followed by a dash, and ending with the actual base64-encoded hash."</p>
+                            <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity">MDN: Subresource Integrity</a></small>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
-                            <h3>Permissions Policy Header Not Set:</h3>
+                            <p>An SRI Hash Generator like <a href="https://www.srihash.org/">SRIHash.org</a> can be used to generate a hash for whichever cdn or url you need to secure the integrity of.</p>
+                            <h3>Example Script Tag with SRI Hash:</h3>
+                            <pre><code>&lt;script src="https://example.com/example-framework.js"
+integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         </div>
                     </details>
                     <details>
