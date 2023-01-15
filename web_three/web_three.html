@@ -306,7 +306,7 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         </div>
                     </details>
                     <details>
-                        <summary>Permissions Policy Header Not Set</summary>
+                        <summary>Permissions Policy Header Not Set <span class="XSS">(XSS)</span> <span class="CORS">(CORS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"Permissions Policy, formerly known as Feature Policy, allows the developer to control the browser features available to a page, its iframes, and subresources, by declaring a set of policies for the browser to enforce. These policies are applied to origins provided in a response header origin list. The origin list can contain same-origins and/or cross-origins, and it allows the developer to control first-party and third-party access to browser features. An empty permissions policy is a permissions policy that has an inherited policy which contains "Enabled" for every supported feature, and a declared policy which is an empty map. Set it and disable all the features that your site does not need or allow them only to the authorized domains:"</p>
@@ -317,21 +317,29 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         </div>
                     </details>
                     <details>
-                        <summary>Cross-Domain JavaScript Source File Inclusion</summary>
+                        <summary>Cross-Domain JavaScript Source File Inclusion <span class="XSS">(XSS)</span> <span class="CORS">(CORS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Cross-domain JavaScript source file inclusion is a security warning that can affect a web application that runs one or more Javascript files from a third-party domain. If the third-party intentionally or unintentionally holds a malicious content, it can be added and executed on the victim’s web application. This possibility occurs when the external Javascript is not validated. It can lead to the leakage of user data. Sensitive user data can be user’s authentication data (tokens, session IDs, cookies, etc) or personal information (email, home address, phone numbers, social security numbers, etc). When a user sends a request, the script will be updated with the response message. If the response is stored in global variables, everyone can read it. If the sensitive information is included in a JSONP response, the executed function can be overridden to get the sensitive information. This trick can be used for global functions as well. Instead of overriding the executed functions, we may use custom-coded callback functions for global functions."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <ul>
+                                <li>"It is advised that owners manage web applications by themselves. You can give the privileges to third parties for managing websites, but be careful that they are publicly recognized and trusted."</li>
+                                <li>"Avoid placing sensitive information inside javascript files or JSONP."</li>
+                                <li>"Always try to sanitize user entries that are stored in JSON files." Refer to Cross Site Scripting Solutions (above) for output encoding and escaping user input.</li>
+                                <li>"Enable Content Security Policy (CSP)." And refer to the tab on setting the Content User Oolicy to help minimize XSS.</li>
+                            </ul>
+                            <small>From: <a href="https://beaglesecurity.com/blog/vulnerability/cross-domain-javascript-source-file-inclusion.html">Beagle Security</a></small>
                         </div>
                     </details>
                     <details>
                         <summary>X-Content-Type-Options Header Missing</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"The X-Content-Type-Options response HTTP header is used by the server to indicate to the browsers that the MIME types advertised in the Content-Type headers should be followed and not guessed. This header is used to block browsers' MIME type sniffing, which can transform non-executable MIME types into executable MIME types (MIME Confusion Attacks)."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Set the Content-Type header correctly throughout the site."</p>
+                            <pre><code>X-Content-Type-Options: nosniff</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers Cheat Sheet</a></small>
                         </div>
                     </details>
                 </ul>

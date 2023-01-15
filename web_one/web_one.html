@@ -329,9 +329,11 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         <summary>X-Content-Type-Options Header Missing</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"The X-Content-Type-Options response HTTP header is used by the server to indicate to the browsers that the MIME types advertised in the Content-Type headers should be followed and not guessed. This header is used to block browsers' MIME type sniffing, which can transform non-executable MIME types into executable MIME types (MIME Confusion Attacks)."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Set the Content-Type header correctly throughout the site."</p>
+                            <pre><code>X-Content-Type-Options: nosniff</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers Cheat Sheet</a></small>
                         </div>
                     </details>
                 </ul>

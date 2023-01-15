@@ -238,34 +238,29 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                     <details>
-                        <summary>Server Leaks Information via “X-Powered-By” HTTP Response Header Field</summary>
-                        <div class="details-box">
-                            <h3>Explanation:</h3>
-                            <p>Explanation...</p>
-                            <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
-                        </div>
-                    </details>
-                    <details>
                         <summary>X-Content-Type-Options Header Missing</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"The X-Content-Type-Options response HTTP header is used by the server to indicate to the browsers that the MIME types advertised in the Content-Type headers should be followed and not guessed. This header is used to block browsers' MIME type sniffing, which can transform non-executable MIME types into executable MIME types (MIME Confusion Attacks)."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Set the Content-Type header correctly throughout the site."</p>
+                            <pre><code>X-Content-Type-Options: nosniff</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers Cheat Sheet</a></small>
                         </div>
                     </details>
                     <details>
                         <summary>Cookie without SameSite Attribute</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"The SameSite attribute of the Set-Cookie HTTP response header allows you to declare if your cookie should be restricted to a first-party or same-site context. You should explicitly communicate the intended SameSite policy for your cookie (rather than relying on browsers to apply SameSite=Lax automatically). This will also improve the experience across browsers as not all of them default to Lax yet. SameSite prevents the browser from sending this cookie along with cross-site requests. The main goal is to mitigate the risk of cross-origin information leakage. It also provides some protection against cross-site request forgery attacks. Possible values for the flag are none, lax, or strict."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>Set the cookie setting:</p>
+                            <pre><code>Set-Cookie: flavor=choco; SameSite=Lax</code></pre>
+                            <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite#:~:text=SameSite%3DNone%20requires%20Secure&text=The%20warning%20appears%20because%20any,marked%20Secure%20will%20be%20rejected.&text=To%20fix%20this%2C%20you%20will,to%20your%20SameSite%3DNone%20cookies.&text=A%20Secure%20cookie%20is%20only,request%20over%20the%20HTTPS%20protocol.">MDN: Same Site</a></small>
                         </div>
                     </details>
                     <details>
-                        <summary>Permissions Policy Header Not Set</summary>
+                        <summary>Permissions Policy Header Not Set <span class="XSS">(XSS)</span> <span class="CORS">(CORS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"Permissions Policy, formerly known as Feature Policy, allows the developer to control the browser features available to a page, its iframes, and subresources, by declaring a set of policies for the browser to enforce. These policies are applied to origins provided in a response header origin list. The origin list can contain same-origins and/or cross-origins, and it allows the developer to control first-party and third-party access to browser features. An empty permissions policy is a permissions policy that has an inherited policy which contains "Enabled" for every supported feature, and a declared policy which is an empty map. Set it and disable all the features that your site does not need or allow them only to the authorized domains:"</p>
@@ -279,18 +274,24 @@ app.use(expressCspHeader({
                         <summary>X-AspNet-Version Response Header</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p><p>"Banner grabbing is a technique used to gain information about a computer system on a network and the services running on its open ports. Administrators can use this to take inventory of the systems and services on their network. However, an intruder can use banner grabbing in order to find network hosts that are running versions of applications and operating systems with known exploits. Some examples of service ports used for banner grabbing are those used by Hyper Text Transfer Protocol (HTTP), File Transfer Protocol (FTP), and Simple Mail Transfer Protocol (SMTP); ports 80, 21, and 25 respectively. Tools commonly used to perform banner grabbing are Telnet, Nmap and Netcat." </p></p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>Remove the header to not expose the sensitive server information.</p>
                         </div>
                     </details>
                     <details>
-                        <summary>Cross-Domain JavaScript Source File Inclusion</summary>
+                        <summary>Cross-Domain JavaScript Source File Inclusion <span class="XSS">(XSS)</span> <span class="CORS">(CORS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Cross-domain JavaScript source file inclusion is a security warning that can affect a web application that runs one or more Javascript files from a third-party domain. If the third-party intentionally or unintentionally holds a malicious content, it can be added and executed on the victim’s web application. This possibility occurs when the external Javascript is not validated. It can lead to the leakage of user data. Sensitive user data can be user’s authentication data (tokens, session IDs, cookies, etc) or personal information (email, home address, phone numbers, social security numbers, etc). When a user sends a request, the script will be updated with the response message. If the response is stored in global variables, everyone can read it. If the sensitive information is included in a JSONP response, the executed function can be overridden to get the sensitive information. This trick can be used for global functions as well. Instead of overriding the executed functions, we may use custom-coded callback functions for global functions."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <ul>
+                                <li>"It is advised that owners manage web applications by themselves. You can give the privileges to third parties for managing websites, but be careful that they are publicly recognized and trusted."</li>
+                                <li>"Avoid placing sensitive information inside javascript files or JSONP."</li>
+                                <li>"Always try to sanitize user entries that are stored in JSON files." Refer to Cross Site Scripting Solutions (above) for output encoding and escaping user input.</li>
+                                <li>"Enable Content Security Policy (CSP)." And refer to the tab on setting the Content User Oolicy to help minimize XSS.</li>
+                            </ul>
+                            <small>From: <a href="https://beaglesecurity.com/blog/vulnerability/cross-domain-javascript-source-file-inclusion.html">Beagle Security</a></small>
                         </div>
                     </details>
                 </ul>

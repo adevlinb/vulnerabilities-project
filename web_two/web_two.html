@@ -190,13 +190,26 @@ origin: function(origin, callback){
                         </div>
                     </details>
                     <details>
-                        <summary>Cross Site Scripting DOM Based</summary>
+                        <summary>Cross Site Scripting DOM Based <span class="XSS">(XSS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Client XSS occurs when untrusted user supplied data is used to update the DOM with an unsafe JavaScript call. A JavaScript call is considered unsafe if it can be used to introduce valid JavaScript into the DOM. This source of this data could be from the DOM, or it could have been sent by the server (via an AJAX call, or a page load). The ultimate source of the data could have been from a request, or from a stored location on the client or the server. As such, you can have both Reflected Client XSS and Stored Client XSS. DOM Based: As defined by Amit Klein, who published the first article about this issue [1], DOM Based XSS is a form of XSS where the entire tainted data flow from source to sink takes place in the browser, i.e., the source of the data is in the DOM, the sink is also in the DOM, and the data flow never leaves the browser. For example, the source (where malicious data is read) could be the URL of the page (e.g., document.location.href), or it could be an element of the HTML, and the sink is a sensitive method call that causes the execution of the malicious data (e.g., document.write)."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
-                            <h3>Permissions Policy Header Not Set:</h3>
+                            <h5>XSS Defense Philosophy</h5>
+                            <p>"For XSS attacks to be successful, an attacker needs to insert and execute malicious content in a webpage. Each variable in a web application needs to be protected. Ensuring that all variables go through validation and are then escaped or sanitized is known as perfect injection resistance. Any variable that does not go through this process is a potential weakness. Frameworks make it easy to ensure variables are correctly validated and escaped or sanitised. However, frameworks aren't perfect and security gaps still exist in popular frameworks like React and Angular. Output Encoding and HTML Sanitization help address those gaps."</p>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#common-mistake" target="_blank">OWASP Cross Site Scripting Prevention</a></small>
+                            <h5>Output Encoding / Character Escaping, and Input Validation</h5>
+                            <p>Output Encoding, Character Escaping, and Input Validation are top defensive strategies to minimize and prevent cross site scripting attacks. When user input that is being displayed as output to the UI there exists an opportunity for a user to type in code that can end up being run because the computer doesn't recognize or know that it is just meant to be displayed as a string, but truly ends up being run as code. Hijackers can exploit this by typing in the code they wish to run. For example</p>
+                            <p>Most frameworks and frontend libraries have output character escaping / security measures built into their technologies. React and Django are two such examples. PHP however, does not.</p>
+                            <h5>PHP Code Example For Hangling Output Character Escaping:</h5>
+                            <p>PHP has functionality built into its system that allows for character escaping, but it is not automatically executed or used:</p>
+                            <pre><code>&lt;?php function escape($string) { return htmlspecialchars($string, ENT_QUOTES) } ?&gt;</code></pre><br>
+                            <pre><code>&lt;p&gt;Hello &lt;?php echo escape($name)?&gt;;&lt;p&gt;</code></pre>
+                            <h5>Explanation:</h5>
+                            <p>When a variable containing user or external input is going to be output in the UI.. if the output contains what looks like actual code (ex: &lt;script&gt;alert(1)&lt;script&gt;) that code will be read by the browser as being actual code to run unless those special html characters (and others) are intentionally told to output as actual test and not to turn it into code. </p>
+                            <p>The output escaping function will parse / convert each variable / user info / output so that it cannot output anything other than a regular string. It is a primary layer of preventing cross site scripting. While user input can be filtered before saving to the database or returning the information back to the frontend, there are other ways to still directly change the output right before it is actually output. Therefore the best place to prevent XSS is right before it is actually output, like the given PHP example. React and Django Templating operate the same way of checking right before output.</p>
+                            <p>An added level of security is input validation that forces a user to match specific parameters so random code is less likely to be input</p>
+                            <p>We also have html sanitization. This process runs the entire html document through a function that will scan for unsafe or unwanted html or for what is deemed safe and parse out the opposite then returning the "sanitized" document. PHP has a strip_tags() function for example. This process does not always have the desired result as it can also stip wanted tags and code. The best approach is considered character escaping and focusing directly on where input/data is being out and displayed.</p>
                         </div>
                     </details>
                     <details>
@@ -264,7 +277,7 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                     <details>
-                        <summary>Permissions Policy Header Not Set</summary>
+                        <summary>Permissions Policy Header Not Set <span class="XSS">(XSS)</span> <span class="CORS">(CORS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"Permissions Policy, formerly known as Feature Policy, allows the developer to control the browser features available to a page, its iframes, and subresources, by declaring a set of policies for the browser to enforce. These policies are applied to origins provided in a response header origin list. The origin list can contain same-origins and/or cross-origins, and it allows the developer to control first-party and third-party access to browser features. An empty permissions policy is a permissions policy that has an inherited policy which contains "Enabled" for every supported feature, and a declared policy which is an empty map. Set it and disable all the features that your site does not need or allow them only to the authorized domains:"</p>
@@ -294,18 +307,21 @@ app.use(expressCspHeader({
                         <summary>X-Content-Type-Options Header Missing</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"The X-Content-Type-Options response HTTP header is used by the server to indicate to the browsers that the MIME types advertised in the Content-Type headers should be followed and not guessed. This header is used to block browsers' MIME type sniffing, which can transform non-executable MIME types into executable MIME types (MIME Confusion Attacks)."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Set the Content-Type header correctly throughout the site."</p>
+                            <pre><code>X-Content-Type-Options: nosniff</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers Cheat Sheet</a></small>
                         </div>
                     </details>
                     <details>
                         <summary>In Page Banner Information Leak</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Banner grabbing is a technique used to gain information about a computer system on a network and the services running on its open ports. Administrators can use this to take inventory of the systems and services on their network. However, an intruder can use banner grabbing in order to find network hosts that are running versions of applications and operating systems with known exploits. Some examples of service ports used for banner grabbing are those used by Hyper Text Transfer Protocol (HTTP), File Transfer Protocol (FTP), and Simple Mail Transfer Protocol (SMTP); ports 80, 21, and 25 respectively. Tools commonly used to perform banner grabbing are Telnet, Nmap and Netcat."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Make sure to disable any HTTP response headers that reveal the server technology, language, and version in your web server configuration. Make certain that no information about the technology stack is returned in cookies. This includes distinguishing parameter names, which should be as generic as possible."</p>
+                            <small>From: <a href="https://en.wikipedia.org/wiki/Banner_grabbing">Wikipedia: Banner Grabbing</a> && <a href="https://zofixer.com/what-is-banner-information-leak-vulnerability/">ZOFixer: Banner Grabbing</a></small>
                         </div>
                     </details>
                 </ul>
