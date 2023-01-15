@@ -269,20 +269,18 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         </div>
                     </details>
                     <details>
-                        <summary>HTTP Only Site <span class="HTTPOC">(HTTPOC)</span></summary>
+                        <summary>HTTP Only Site <span class="HTTPOC">(HTTPOC)</span><span class="XSS">(XSS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>Http Cookies: "An HTTP cookie (web cookie, browser cookie) is a small piece of data that a server sends to a user's web browser. The browser may store the cookie and send it back to the same server with later requests. Typically, an HTTP cookie is use to tell if two requests come from the same browser—keeping a user logged in, for example. It remembers stateful information for the stateless HTTP protocol."</p>
-                            <small>From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">Mozilla Developer Network: HTTP Cookies</a></small>
                             <p>"HttpOnly is an additional flag included in a Set-Cookie HTTP response header. Using the HttpOnly flag when generating a cookie helps mitigate the risk of client side script accessing the protected cookie (if the browser supports it)."</p>
-                            <small>From: <a href="https://owasp.org/www-community/HttpOnly" target="_blank">OWASP HttpOnly</a></small>
                             <h3>Solution:</h3>
                             <p>HttpOnly is a security measure set by the Set-Cookie HTTP Response Header from the server. After examining the network tab in Chrome DevTools for request and response headers as well as the applications tab for any cookies being set, I did not find anything being set by this api. As a result there is not currently a specific cookie vulnerable to scripting attacks for this site. Additionally cookies are only an issue if the ones being set by the server have not been properly secured when setting the cookies in the response header. HttpOnly is just one of those mitigation tactics that can be used to help prevent Cross Site Scripting <span class="XSS">(XSS)</span>. "Cookies are also susceptible to CSRF (Cross-Site Request Forgery), XS-Leaks (Cross-Site Leaks), Network Attacks, and others." <small><a href="https://www.appsecmonkey.com/blog/cookie-security">App Sec Monkey</a></small> has an excellent site with explanation on Cookie Related Attacks and mitigation tactics for attacks beyond HttpOnly Cookie settings. HttpOnly settings are easily added by simply adding "HttpOnly" on the response header when setting the cookie.</p>
                             <small>Example of a secure cookie setup in response headers would be (based on <a href="https://www.appsecmonkey.com/blog/cookie-security" target="_blank">App Sec Monkey</a>):</small>
                             <pre><code>Set-Cookie: __Host-SessionId=s3cr3t; Secure; HttpOnly; SameSite=Lax; Path=/</code></pre>
                             <h3>Further notes:</h3>
                             <p>"According to Michael Howard, Senior Security Program Manager in the Secure Windows Initiative group at Microsoft, the majority of XSS attacks target theft of session cookies. A server could help mitigate this issue by setting the HttpOnly flag on a cookie it creates, indicating the cookie should not be accessible on the client. If a browser that supports HttpOnly detects a cookie containing the HttpOnly flag, and client side script code attempts to read the cookie, the browser returns an empty string as the result. This causes the attack to fail by preventing the malicious (usually XSS) code from sending the data to an attacker’s website."</p>
-                            <small>From: <a href="https://owasp.org/www-community/HttpOnly#:~:text=If%20a%20browser%20does%20not,or%20modification%20by%20malicious%20script." target="_blank">OWASP HttpOnly</a></small>
+                            <small>From: <a href="https://owasp.org/www-community/HttpOnly" target="_blank">OWASP HttpOnly</a> && <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies">Mozilla Developer Network: HTTP Cookies</a></small>
                         </div>
                     </details>
                     <details>
@@ -290,13 +288,13 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"Web Cache Deception (WCD) is an attack in which an attacker deceives a caching proxy into improperly storing private information sent over the internet and gaining unauthorized access to that cached data. It was proposed by Omer Gil, a security researcher in 2017. Web caching is the storing of data for reuse in the same browser. It is one of the most beneficial technologies available to improve user experience and enables better performance standards for the users. It is considered an essential internet infrastructure and one of the most popular CDN (Content Delivery Network). The developers configure web caching functionality to their applications, which caches the web files that are frequently requested from the users so that when a user request one of those files the next time, it is directly served from the cache. Thus, the server does not have to perform the same request repeatedly, which can prevent the server from being overloaded. Web cache deception is easier to exploit and hence it belongs to the group of the most critical vulnerabilities. The best part is that there are plenty of ways to implement security in the sensitive content of the website from being cached and from getting revealed to the unauthorized users."</p>
-                            <small>From: <a href="https://beaglesecurity.com/blog/article/web-cache-deception.html">Beagle Security: Web Cache Deception</a></small>
                             <h3>Solutions:</h3>
                             <ul>
                                 <li>"The cache server should run based on the cache-control headers set by your application, and only cache the files if their HTTP caching headers allow it."</li>
                                 <li>"Cache the files only depending upon their Content-Type header, rather than solely checking the file extensions."</li>
                                 <li>"The server should return HTTP-errors such as 302, or 404 based on the non-existent files being requested."</li>
                             </ul>
+                            <br>
                             <small>From: <a href="https://beaglesecurity.com/blog/article/web-cache-deception.html">Beagle Security: Web Cache Deception</a></small>
                         </div>
                     </details>
@@ -304,9 +302,16 @@ crossorigin="anonymous"&gt;&lt;/script&gt;</code></pre>
                         <summary>Server Leaks Version Information via Server HTTP Response Header Field</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"HTTP Headers are a great booster for web security with easy implementation. Proper HTTP response headers can help prevent security vulnerabilities like Cross-Site Scripting, Clickjacking, Information disclosure and more. The Server header describes the software used by the origin server that handled the request — that is, the server that generated the response. Detailed information in this header can expose the server to attackers. Using the information in this header, attackers can find vulnerabilities easier."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Configure the webserver to stop sending detailed information in the Server header."</p>
+                            <p>"Open the Apache configuration file (httpd.conf or apache2.conf) and add below lines to it."</p>
+                            <small>Code Example in Apache:</small>
+                            <pre><code>ServerTokens Prod<br>ServerSignature Off</code></pre><br>
+                            <small>Code Ex. for Nginx:</small>
+                            <p>"Open the Nginx configuration file (nginx.conf) and add below line to either http, server, or location sections. Then restart the server"</p>
+                            <pre><code>server_tokens off;</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers</a> && <a href="https://www.thesmartscanner.com/vulnerability-list/server-version-disclosure">SmartScanner: Server Version Disclosure</a></small>
                         </div>
                     </details>
                     <details>

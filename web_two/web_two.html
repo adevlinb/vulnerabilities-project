@@ -276,9 +276,16 @@ app.use(expressCspHeader({
                         <summary>Server Leaks Version Information via Server HTTP Response Header Field</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"HTTP Headers are a great booster for web security with easy implementation. Proper HTTP response headers can help prevent security vulnerabilities like Cross-Site Scripting, Clickjacking, Information disclosure and more. The Server header describes the software used by the origin server that handled the request — that is, the server that generated the response. Detailed information in this header can expose the server to attackers. Using the information in this header, attackers can find vulnerabilities easier."</p>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <p>"Configure the webserver to stop sending detailed information in the Server header."</p>
+                            <p>"Open the Apache configuration file (httpd.conf or apache2.conf) and add below lines to it."</p>
+                            <small>Code Example in Apache:</small>
+                            <pre><code>ServerTokens Prod<br>ServerSignature Off</code></pre><br>
+                            <small>Code Ex. for Nginx:</small>
+                            <p>"Open the Nginx configuration file (nginx.conf) and add below line to either http, server, or location sections. Then restart the server"</p>
+                            <pre><code>server_tokens off;</code></pre>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html">OWASP HTTP Security Response Headers</a> && <a href="https://www.thesmartscanner.com/vulnerability-list/server-version-disclosure">SmartScanner: Server Version Disclosure</a></small>
                         </div>
                     </details>
                     <details>
