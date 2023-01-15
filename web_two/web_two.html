@@ -172,7 +172,7 @@ origin: function(origin, callback){
                             <p>The main solution is to not accept input as a means for supplying the redirect url. The server can supply a specific, hardcoded, redirect...</p>
                             <small>Example of server-side, hard-coded, redirect in java:</small>
                             <pre><code>response.sendRedirect("http://www.mysite.com");</code></pre>
-                            <small>Example in PHP:</small>
+                            <small>Example in PHP (client side hard coded redirect):</small>
 <pre><code>&lt;?php
     /* Redirect browser */
     header("Location: http://www.mysite.com");
@@ -212,7 +212,7 @@ origin: function(origin, callback){
                         </div>
                     </details>
                     <details>
-                        <summary>Content Security Policy Header Not Set </summary>
+                        <summary>Content Security Policy Header Not Set <span class="XSS">(XSS)</span></summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"The HTTP Content-Security-Policy response header allows web site administrators to control resources the user agent is allowed to load for a given page. With a few exceptions, policies mostly involve specifying server origins and script endpoints. This helps guard against cross-site scripting attacks (Cross-site_scripting)."</p>
@@ -292,15 +292,6 @@ app.use(expressCspHeader({
                     </details>
                     <details>
                         <summary>In Page Banner Information Leak</summary>
-                        <div class="details-box">
-                            <h3>Explanation:</h3>
-                            <p>Explanation...</p>
-                            <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
-                        </div>
-                    </details>
-                    <details>
-                        <summary>Server Leaks Information via X-Powered-By HTTP Response Header Field s</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>Explanation...</p>
