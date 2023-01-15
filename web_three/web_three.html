@@ -194,14 +194,18 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                     <details>
-                        <summary>Missing Anti-clickjacking Header</summary>
-                        <div class="details-box">
-                            <h3>Explanation:</h3>
-                            <p>Explanation...</p>
-                            <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
-                        </div>
-                    </details>
+                        <details>
+                            <summary>Missing Anti-clickjacking Header</summary>
+                            <div class="details-box">
+                                <h3>Explanation:</h3>
+                                <p></p>
+                                <p>"Clickjacking, also known as a “UI redress attack”, is when an attacker uses multiple transparent or opaque layers to trick a user into clicking on a button or link on another page when they were intending to click on the top level page. Thus, the attacker is “hijacking” clicks meant for their page and routing them to another page, most likely owned by another application, domain, or both. Using a similar technique, keystrokes can also be hijacked. With a carefully crafted combination of stylesheets, iframes, and text boxes, a user can be led to believe they are typing in the password to their email or bank account, but are instead typing into an invisible frame controlled by the attacker."</p>
+                                <small>From: <a href="https://owasp.org/www-community/attacks/Clickjacking" target="_blank">OWASP on Clickjacking:</a></small>
+                                <h3>Solutions:</h3>
+                                <p>"Preventing the browser from loading the page in frame using the X-Frame-Options or Content Security Policy (frame-ancestors) HTTP headers. Preventing session cookies from being included when the page is loaded in a frame using the SameSite cookie attribute. Implementing JavaScript code in the page to attempt to prevent it being loaded in a frame (known as a "frame-buster")."</p>
+                                <small>From: <a href="https://owasp.org/www-community/attacks/Clickjacking" target="_blank">OWASP on Clickjacking:</a></small>
+                            </div>
+                        </details>
                     <details>
                         <summary>Cross-Domain Misconfiguration</summary>
                         <div class="details-box">
