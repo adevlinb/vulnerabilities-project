@@ -158,7 +158,7 @@ origin: function(origin, callback){
                 <small>Click on the arrow next to the vulnerability to see an explanation and solutions:</small>
                 <ul>
                     <details>
-                        <summary>Content Security Policy Header Not Set <span class="XSS">(XSS)</span></summary>
+                        <summary>Content Security Policy Header Not Set</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
                             <p>"The HTTP Content-Security-Policy response header allows web site administrators to control resources the user agent is allowed to load for a given page. With a few exceptions, policies mostly involve specifying server origins and script endpoints. This helps guard against cross-site scripting attacks (Cross-site_scripting)."</p>
@@ -201,9 +201,24 @@ app.use(expressCspHeader({
                         <summary>Absence of Anti-CSRF Tokens</summary>
                         <div class="details-box">
                             <h3>Explanation:</h3>
-                            <p>Explanation...</p>
+                            <p>"Cross-Site Request Forgery (CSRF) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user's web browser to perform an unwanted action on a trusted site when the user is authenticated. A CSRF attack works because browser requests automatically include all cookies including session cookies. Therefore, if the user is authenticated to the site, the site cannot distinguish between legitimate authorized requests and forged authenticated requests. This attack is thwarted when proper Authorization is used, which implies that a challenge-response mechanism is required that verifies the identity and authority of the requester. The impact of a successful CSRF attack is limited to the capabilities exposed by the vulnerable application and privileges of the user. For example, this attack could result in a transfer of funds, changing a password, or making a purchase with the user's credentials. In effect, CSRF attacks are used by an attacker to make a target system perform a function via the victim's browser, without the victim's knowledge, at least until the unauthorized transaction has been committed."</p>
+                            <small>From: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">Cross-Site Request Forgery Prevention Cheat Sheet</a></small>
                             <h3>Solutions:</h3>
-                            <p>Solutions with Code</p>
+                            <ul>
+                                <li>Check if your framework has built-in CSRF protection and use it.</li>
+                                <li>For stateful software use the synchronizer token pattern.</li>
+                                <li>For stateless software use double submit cookies.</li>
+                                <li>Consider SameSite Cookie Attribute for session cookies.</li>
+                                <li>Consider implementing user interaction based protection for highly sensitive operations.</li>
+                                <li>Consider the use of custom request headers.</li>
+                                <li>Consider verifying the origin with standard headers.</li>
+                                <small>Above list from: <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">Cross-Site Request Forgery Prevention Cheat Sheet</a></small>
+                            </ul>
+                            <h3>Most popular & Recommended: Synchronizer Token Pattern</h3>
+                            <p>"CSRF tokens should be generated on the server-side. They can be generated once per user session or for each request. Per-request tokens are more secure than per-session tokens as the time range for an attacker to exploit the stolen tokens is minimal. However, this may result in usability concerns. For example, the "Back" button browser capability is often hindered as the previous page may contain a token that is no longer valid. Interaction with this previous page will result in a CSRF false positive security event on the server. In per-session token implementations after the initial generation of a token, the value is stored in the session and is used for each subsequent request until the session expires. When a request is issued by the client, the server-side component must verify the existence and validity of the token in the request compared to the token found in the user session. If the token was not found within the request, or the value provided does not match the value within the user session, then the request should be rejected. Additional actions such as logging the event as a potential CSRF attack in progress should also be considered. For the Synchronised Token Pattern, CSRF tokens should not be transmitted using cookies. The CSRF token can be transmitted to the client as part of a response payload, such as a HTML or JSON response. It can then be transmitted back to the server as a hidden field on a form submission, or via an AJAX request as a custom header value or part of a JSON payload. Make sure that the token is not leaked in the server logs, or in the URL. CSRF tokens in GET requests are potentially leaked at several locations, such as the browser history, log files, network utilities that log the first line of a HTTP request, and Referer headers if the protected site links to an external site."</p>
+                            <pre><code>&lt;form action="/transfer.do" method="post"&gt;
+&lt;input type="hidden" name="CSRFToken" value="OWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZMGYwMGEwOA=="&gt;
+&lt;/form&gt;</code></pre>
                         </div>
                     </details>
                     <details>
@@ -270,9 +285,6 @@ app.use(expressCspHeader({
                         </div>
                     </details>
                 </ul>
-            </div>
-            <div>
-                <h3>Site Specific Solutions and Feedback:</h3>
             </div>
         </section>
     </div>
